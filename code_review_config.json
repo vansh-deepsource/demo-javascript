@@ -1,0 +1,14 @@
+{
+    "base_oid": "663c25182d424ad20236e5033e3c12b13109e4cd",
+    "head_oid": "3dacbe33922edc6bcda56d1c0d47db911a33eb3f",
+    "file_paths": [
+        "index.js",
+        "packages/demo-react/src/components/home.js",
+        "packages/demo-typescript/src/function.ts"
+    ],
+    "categories": [
+        "secrets",
+        "security",
+        "codereview"
+    ]
+}

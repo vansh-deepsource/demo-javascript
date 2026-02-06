@@ -1,0 +1,74 @@
+[
+  {
+    "issue_id": "2",
+    "file_path": "packages/demo-react/src/components/home.js",
+    "issue_title": "Unsafe javascript: URI",
+    "issue_text": "Using a `javascript:` URI in an `href` attribute is a dangerous pattern that can lead to Cross-Site Scripting (XSS) vulnerabilities if the URI is ever constructed with user-controlled data. This is also a React anti-pattern and can cause accessibility issues for users of assistive technologies.\n\nFor user actions, prefer using a `<button>` element. If an anchor tag is necessary for styling, attach an `onClick` handler and prevent the default navigation behavior.",
+    "start_line": 18,
+    "end_line": 18,
+    "fix_steps": "In `packages/demo-react/src/components/home.js`, replace the anchor tag with a more secure and accessible alternative. If the element is intended to trigger an action, use a button: `<button type=\"button\">Unsafe Linking in React</button>`. If it must be a link, use a safe `href` and handle the click event: `<a href=\"#\" onClick={(e) => e.preventDefault()}>Unsafe Linking in React</a>`.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  },
+  {
+    "issue_id": "3",
+    "file_path": "index.js",
+    "issue_title": "Insecure cipher mode",
+    "issue_text": "The `ECB` (Electronic Codebook) cipher mode is insecure because it encrypts identical blocks of plaintext into identical blocks of ciphertext, failing to hide data patterns. This can allow an attacker to infer information about the encrypted data.\n\nReplace `aes-192-ecb` with a more secure mode like `aes-192-cbc` or `aes-256-gcm`, which requires a unique Initialization Vector (IV) for each encryption.",
+    "start_line": 78,
+    "end_line": 78,
+    "fix_steps": "In `index.js`, line 78, replace `crypto.createCipheriv('aes-192-ecb', Buffer.from(ENCRYPTION_KEY), iv)` with a version using a secure cipher mode like GCM, for example: `crypto.createCipheriv('aes-256-gcm', Buffer.from(ENCRYPTION_KEY), iv)`. This requires providing a valid, unique initialization vector (`iv`) for each operation.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  },
+  {
+    "issue_id": "4",
+    "file_path": "index.js",
+    "issue_title": "Unsafe property access",
+    "issue_text": "The `String.prototype.match()` method returns `null` if no match is found. Attempting to access an index like `[0]` on `null` will throw a `TypeError`, causing the application to crash. This can be triggered by any input string that doesn't contain \"hasTheMagic\", leading to a denial of service.\n\nCheck if the result of `match()` is `null` before accessing any of its properties to prevent the crash.",
+    "start_line": 83,
+    "end_line": 83,
+    "fix_steps": "In `index.js`, line 83, rewrite the line to prevent a crash when no match is found. Change `const matches = str.match(/hasTheMagic/)[0] ? process(str) : null;` to `const matchResult = str.match(/hasTheMagic/); const matches = matchResult ? process(str) : null;`. This ensures the code doesn't try to access an index on a `null` value.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  },
+  {
+    "issue_id": "5",
+    "file_path": "index.js",
+    "issue_title": "Use of undefined variables",
+    "issue_text": "The variables `ENCRYPTION_KEY` and `iv` are used without being defined or imported in the current scope. This will cause a `ReferenceError` at runtime when `getEncryptedKey` is called, crashing the application.\n\nEnsure these variables are properly defined, for example by loading them from environment variables or a configuration file, before they are used.",
+    "start_line": 78,
+    "end_line": 78,
+    "fix_steps": "In `index.js`, before line 78, define the `ENCRYPTION_KEY` and `iv` variables. For example, load them from environment variables: `const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;` and `const iv = process.env.ENCRYPTION_IV;`. Ensure these environment variables are set where the application runs.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  },
+  {
+    "issue_id": "6",
+    "file_path": "index.js",
+    "issue_title": "Call to undefined function",
+    "issue_text": "The function `process` is called but is not defined or imported within the file's scope. This will result in a `ReferenceError` at runtime when `isMatched` is called with a matching string, causing a crash.\n\nDefine or import the `process` function before it is called to ensure the code can execute without error.",
+    "start_line": 83,
+    "end_line": 83,
+    "fix_steps": "In `index.js`, before line 82, add a definition for the `process` function. For example: `function process(str) { /* ... implementation ... */ return str; }`. This ensures the function exists before it is called.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  },
+  {
+    "issue_id": "7",
+    "file_path": "packages/demo-typescript/src/function.ts",
+    "issue_title": "Insecure use of `any` type",
+    "issue_text": "The widespread use of `any` for parameters, such as in the constructor and the `sum` method, disables TypeScript's static type safety. This can lead to severe runtime errors and security vulnerabilities like type confusion. For example, `sum(\"10\", 5)` would incorrectly result in string concatenation (`\"105\"`) instead of addition.\n\nReplace `any` with specific types like `number`. For values with truly unknown types, use `unknown` and perform explicit type checks before using them. This will restore type safety and prevent unexpected behavior.",
+    "start_line": 2,
+    "end_line": 11,
+    "fix_steps": "In `packages/demo-typescript/src/function.ts`:\n1. On line 2, change `private b: any` to a more specific type, for example `private b: number`.\n2. On line 7, change `sum(a: any = 0, b: number )` to `sum(a: number = 0, b: number )`.\n3. On line 11, replace `c?: any` with a more specific type.\nThis will enforce type safety and prevent type confusion bugs.",
+    "feedback": null,
+    "patch_infos": null,
+    "use_stream": true
+  }
+]
